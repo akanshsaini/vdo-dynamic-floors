@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>VDO.AI — Dynamic Floors Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="noise"></div>
+<div class="grid-bg"></div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-left">
+    <div class="logo-mark">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 2L18 7V13L10 18L2 13V7L10 2Z" stroke="#00FF94" stroke-width="1.5" fill="none"/>
+        <path d="M10 6L14 8.5V13.5L10 16L6 13.5V8.5L10 6Z" fill="#00FF94" opacity="0.3"/>
+        <circle cx="10" cy="10" r="2" fill="#00FF94"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-name">VDO.AI</div>
+      <div class="logo-sub">Dynamic Floors Engine</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="status-pill" id="statusPill">
+      <span class="status-dot"></span>
+      <span id="statusText">Ready</span>
+    </div>
+    <button class="btn-ghost" id="resetBtn" style="display:none" onclick="resetApp()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      New Analysis
+    </button>
+    <button class="btn-ghost" id="githubBtn" onclick="window.open('https://github.com','_blank')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </button>
+  </div>
+</header>
+
+<!-- UPLOAD VIEW -->
+<main id="uploadView">
+  <div class="upload-hero">
+    <div class="hero-glow"></div>
+    <div class="upload-content">
+      <div class="hero-badge">ELASTICITY-BASED PRICING</div>
+      <h1 class="hero-title">Dynamic Floor<br/><span class="gradient-text">Intelligence</span></h1>
+      <p class="hero-desc">Upload your 30-day GAM report. Get per-segment soft floor & hard floor recommendations powered by elasticity modelling — no AI hallucinations, pure math.</p>
+
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <div class="drop-inner">
+          <div class="drop-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <div class="drop-text">Drop GAM report CSV here</div>
+          <div class="drop-sub">or click to browse · Supports multi-pricing-rule reports</div>
+          <div class="drop-tags">
+            <span class="tag">google_mcm</span>
+            <span class="tag">google_mcm_apac</span>
+            <span class="tag">ellipsis · z1 · socialnieuws</span>
+          </div>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept=".csv" style="display:none" onchange="handleFile(this.files[0])"/>
+
+      <div class="upload-meta">
+        <div class="meta-item"><div class="meta-dot"></div>Soft floor = revenue-maximising price point</div>
+        <div class="meta-item"><div class="meta-dot"></div>Hard floor = collapse guardrail before fill loss</div>
+        <div class="meta-item"><div class="meta-dot"></div>UPR export matches GAM upload format exactly</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- DASHBOARD -->
+<div id="dash" style="display:none">
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab active" data-tab="overview" onclick="switchTab('overview')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Overview
+    </button>
+    <button class="tab" data-tab="recommendations" onclick="switchTab('recommendations')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Recommendations <span class="tab-count" id="recCount">0</span>
+    </button>
+    <button class="tab" data-tab="curves" onclick="switchTab('curves')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Revenue Curves
+    </button>
+    <button class="tab" data-tab="upr" onclick="switchTab('upr')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      UPR Export
+    </button>
+  </div>
+
+  <!-- OVERVIEW TAB -->
+  <div class="tab-panel active" id="tab-overview">
+    <div class="panel-inner">
+      <div class="kpi-grid" id="kpiGrid"></div>
+      <div class="two-col">
+        <div class="glass-card">
+          <div class="card-label">Direction breakdown</div>
+          <div id="dirChart"></div>
+        </div>
+        <div class="glass-card">
+          <div class="card-label">Risk distribution</div>
+          <div id="riskChart"></div>
+        </div>
+      </div>
+      <div class="glass-card">
+        <div class="card-label">Top opportunities by expected lift</div>
+        <table class="data-table" id="top5Table"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECOMMENDATIONS TAB -->
+  <div class="tab-panel" id="tab-recommendations">
+    <div class="panel-inner">
+      <div class="filter-bar">
+        <select class="filter-sel" id="fDir" onchange="renderRecs()">
+          <option value="">All directions</option>
+          <option value="increase">↑ Increase</option>
+          <option value="maintain">→ Maintain</option>
+          <option value="decrease">↓ Decrease</option>
+        </select>
+        <select class="filter-sel" id="fRisk" onchange="renderRecs()">
+          <option value="">All risk levels</option>
+          <option value="Low">Low risk</option>
+          <option value="Medium">Medium risk</option>
+          <option value="High">High risk</option>
+        </select>
+        <select class="filter-sel" id="fSSP" onchange="renderRecs()">
+          <option value="">All SSPs</option>
+          <option value="google_mcm">google_mcm</option>
+          <option value="google_mcm_apac">google_mcm_apac</option>
+        </select>
+        <select class="filter-sel" id="fDevice" onchange="renderRecs()">
+          <option value="">All devices</option>
+        </select>
+        <select class="filter-sel" id="fCountry" onchange="renderRecs()">
+          <option value="">All countries</option>
+        </select>
+        <div style="margin-left:auto">
+          <button class="btn-primary" onclick="downloadRecs()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="recTable">
+          <thead>
+            <tr>
+              <th>Ad Unit</th><th>Country</th><th>Device</th><th>SSP</th>
+              <th>Current ($)</th><th>Soft Floor ($)</th><th>Hard Floor ($)</th>
+              <th>eCPM ($)</th><th>Imps</th><th>Lift %</th><th>Risk</th><th>Direction</th>
+            </tr>
+          </thead>
+          <tbody id="recBody"></tbody>
+        </table>
+      </div>
+      <div class="table-footer" id="recFooter"></div>
+    </div>
+  </div>
+
+  <!-- CURVES TAB -->
+  <div class="tab-panel" id="tab-curves">
+    <div class="panel-inner">
+      <div class="filter-bar">
+        <select class="filter-sel" id="curveSeg" onchange="renderCurves()" style="max-width:420px"></select>
+      </div>
+      <div class="curves-grid">
+        <div class="glass-card">
+          <div class="card-label">Revenue by floor price</div>
+          <canvas id="cRev" height="220" role="img" aria-label="Revenue curve chart"></canvas>
+        </div>
+        <div class="glass-card">
+          <div class="card-label">Match rate by floor price</div>
+          <canvas id="cMR" height="220" role="img" aria-label="Match rate curve chart"></canvas>
+        </div>
+        <div class="glass-card" style="grid-column:1/-1">
+          <div class="card-label">Impression volume by floor price</div>
+          <canvas id="cImps" height="160" role="img" aria-label="Impression volume chart"></canvas>
+        </div>
+      </div>
+      <div class="glass-card" id="segInfo" style="margin-top:0"></div>
+    </div>
+  </div>
+
+  <!-- UPR TAB -->
+  <div class="tab-panel" id="tab-upr">
+    <div class="panel-inner">
+      <div class="upr-header-row">
+        <div>
+          <div class="card-label" style="margin-bottom:4px">GAM Unified Pricing Rules Export</div>
+          <p class="upr-desc">Output format matches GAM UPR upload exactly: <code>country, device, ad unit, os, browser, ssp, floor</code></p>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-ghost" onclick="downloadUPRSoft()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Soft Floors CSV
+          </button>
+          <button class="btn-primary" onclick="downloadUPRHard()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Hard Floors CSV
+          </button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="uprTable">
+          <thead>
+            <tr>
+              <th>Country</th><th>Device</th><th>Ad Unit</th><th>OS</th><th>Browser</th><th>SSP</th>
+              <th>Soft Floor ($)</th><th>Hard Floor ($)</th><th>Direction</th>
+            </tr>
+          </thead>
+          <tbody id="uprBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
